@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Перевірка...</title></head>
+<body>
+    <script>
+        if (window.opener && window.opener !== window) {
+            window.opener.postMessage('show_account_not_found', '*');
+            window.close();
+        } else {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

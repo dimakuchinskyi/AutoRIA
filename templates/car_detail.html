@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="detail-page-bg">
+    <div class="detail-container">
+        
+        <div class="breadcrumbs">
+            <a href="{% url 'home' %}">AUTO.RIA.com</a> › 
+            <a href="{% url 'search' %}">Авто з пробігом</a> › 
+            <a href="#">{{ car.location }}</a> › 
+            <a href="#">{{ car.brand }}</a> › 
+            <span>{{ car.brand }} {{ car.model }}</span>
+        </div>
+
+        <div class="detail-grid">
+            
+            <div class="detail-main">
+                
+                <h1 class="detail-title">{{ car.brand }} {{ car.model }} {{ car.year }}</h1>
+                
+                <div class="detail-gallery">
+                    {% if car.image_url %}
+                        <img src="{{ car.image_url }}" alt="{{ car.brand }} {{ car.model }}">
+                    {% else %}
+                        <div class="no-photo-large">
+                            <i class="fas fa-camera"></i>
+                            <p>Продавець не додав фото</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="quick-specs">
+                    <div class="spec-item"><i class="fas fa-tachometer-alt"></i> {{ car.mileage }} тис. км</div>
+                    <div class="spec-item"><i class="fas fa-cog"></i> {{ car.transmission|default:"Не вказано" }}</div>
+                    <div class="spec-item"><i class="fas fa-gas-pump"></i> {{ car.fuel|default:"Не вказано" }}</div>
+                    <div class="spec-item"><i class="fas fa-map-marker-alt"></i> {{ car.location }}</div>
+                </div>
+
+                <div class="verified-block">
+                    <h3>Перевірено AUTO.RIA за офіційними базами</h3>
+                    <div class="verified-item">
+                        <i class="fas fa-check-circle" style="color: #76b014;"></i>
+                        <div>
+                            <strong>Страхові випадки не виявлено</strong>
+                            <p>Перевірено {{ car.created_at|date:"d.m.Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h2>Опис від продавця</h2>
+                    <p class="detail-description">{{ car.description|linebreaksbr }}</p>
+                </div>
+
+                <div class="detail-section">
+                    <h2>Характеристики авто</h2>
+                    <div class="specs-grid">
+                        <div class="spec-row">
+                            <span class="spec-label">Марка, Модель</span>
+                            <span class="spec-value"><strong>{{ car.brand }} {{ car.model }}</strong></span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Рік випуску</span>
+                            <span class="spec-value">{{ car.year }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Тип транспорту</span>
+                            <span class="spec-value">{{ car.transport_type }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Двигун (Пальне)</span>
+                            <span class="spec-value">{{ car.fuel|default:"Не вказано" }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Коробка передач</span>
+                            <span class="spec-value">{{ car.transmission|default:"Не вказано" }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Колір</span>
+                            <span class="spec-value">{{ car.color|default:"Не вказано" }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Технічний стан</span>
+                            <span class="spec-value">{{ car.tech_state|default:"Не вказано" }}</span>
+                        </div>
+                        {% if car.modification %}
+                        <div class="spec-row">
+                            <span class="spec-label">Модифікація</span>
+                            <span class="spec-value">{{ car.modification }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+            <aside class="detail-sidebar">
+                <div class="sidebar-box">
+                    
+                    <div class="price-block">
+                        <div class="price-usd">{{ car.price }} $</div>
+                        <div class="price-uah">• {{ price_uah }} грн</div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="seller-block">
+                        <div class="seller-header">
+                            <div class="seller-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="seller-info">
+                                <span class="seller-badge">Продавець</span>
+                                <h3 class="seller-name">
+                                    {% if car.user.first_name %}
+                                        {{ car.user.first_name }} {{ car.user.last_name }}
+                                    {% else %}
+                                        {{ car.user.email }}
+                                    {% endif %}
+                                    <i class="fas fa-check-circle" style="color: #76b014; font-size: 14px;"></i>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="seller-stats">
+                            <p><i class="fas fa-star"></i> Працює з AUTO.RIA</p>
+                        </div>
+                    </div>
+
+                    <button class="btn-phone" onclick="alert('У демо-версії телефони приховані!')">
+                        (067) XXX XX XX <br>
+                        <span>Показати телефон</span>
+                    </button>
+
+                    <button class="btn-chat">
+                        <i class="far fa-comment"></i> Написати в чат
+                    </button>
+                    
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .detail-page-bg { background-color: #f4f8fa; padding: 20px 0 60px; font-family: Arial, sans-serif; }
+    .detail-container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+    
+    .breadcrumbs { font-size: 13px; color: #6a758a; margin-bottom: 20px; }
+    .breadcrumbs a { color: #2b5585; text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .breadcrumbs span { color: #9ba3b3; }
+
+    .detail-grid { display: grid; grid-template-columns: 1fr 340px; gap: 30px; align-items: start; }
+
+    .detail-title { font-size: 28px; color: #21242b; font-weight: bold; margin: 0 0 20px 0; }
+    
+    .detail-gallery { width: 100%; border-radius: 8px; overflow: hidden; margin-bottom: 20px; background: #000; display: flex; justify-content: center; }
+    .detail-gallery img { width: 100%; max-height: 500px; object-fit: cover; display: block; }
+    .no-photo-large { width: 100%; height: 400px; background: #e5e8ee; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #a0a8b5; font-size: 16px; }
+    .no-photo-large i { font-size: 60px; margin-bottom: 16px; }
+
+    .quick-specs { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 30px; font-size: 14px; color: #21242b; }
+    .spec-item { display: flex; align-items: center; gap: 8px; background: #fff; padding: 8px 16px; border-radius: 4px; border: 1px solid #e5e8ee; }
+    .spec-item i { color: #9ba3b3; }
+
+    .verified-block { background: #fdf5f5; border: 1px solid #f9d8d8; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+    .verified-block h3 { margin: 0 0 16px 0; font-size: 16px; color: #21242b; }
+    .verified-item { display: flex; gap: 12px; align-items: flex-start; }
+    .verified-item strong { display: block; font-size: 14px; color: #21242b; margin-bottom: 4px; }
+    .verified-item p { margin: 0; font-size: 13px; color: #6a758a; }
+
+    .detail-section { background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #e5e8ee; margin-bottom: 20px; }
+    .detail-section h2 { font-size: 20px; color: #21242b; margin: 0 0 20px 0; border-bottom: 1px solid #e5e8ee; padding-bottom: 12px; }
+    .detail-description { font-size: 15px; color: #4a5468; line-height: 1.6; margin: 0; }
+
+    .specs-grid { display: flex; flex-direction: column; gap: 12px; }
+    .spec-row { display: flex; font-size: 15px; }
+    .spec-label { width: 40%; color: #6a758a; }
+    .spec-value { width: 60%; color: #21242b; }
+
+    .sidebar-box { background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #e5e8ee; position: sticky; top: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+    
+    .price-block { display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; }
+    .price-usd { font-size: 28px; color: #76b014; font-weight: bold; }
+    .price-uah { font-size: 16px; color: #6a758a; }
+    
+    .divider { border: none; border-top: 1px solid #e5e8ee; margin: 0 0 20px 0; }
+
+    .seller-block { margin-bottom: 24px; }
+    .seller-header { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+    .seller-avatar { width: 48px; height: 48px; background: #e5e8ee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #a0a8b5; }
+    .seller-badge { font-size: 12px; color: #6a758a; display: block; margin-bottom: 4px; }
+    .seller-name { font-size: 16px; color: #2b5585; margin: 0; display: flex; align-items: center; gap: 6px; }
+    
+    .seller-stats p { font-size: 13px; color: #21242b; margin: 0; display: flex; align-items: center; gap: 6px; font-weight: bold; }
+    .seller-stats i { color: #ffc107; }
+
+    .btn-phone { width: 100%; background: #00a041; color: #fff; border: none; border-radius: 4px; padding: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-bottom: 12px; }
+    .btn-phone:hover { background: #008a38; }
+    .btn-phone span { display: block; font-size: 13px; font-weight: normal; margin-top: 4px; text-decoration: underline; }
+
+    .btn-chat { width: 100%; background: #fff; color: #2b5585; border: 1px solid #2b5585; border-radius: 4px; padding: 12px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-chat:hover { background: #f4f8fa; }
+
+    @media (max-width: 900px) {
+        .detail-grid { grid-template-columns: 1fr; }
+        .sidebar-box { position: static; margin-bottom: 20px; }
+    }
+</style>
+{% endblock content %}

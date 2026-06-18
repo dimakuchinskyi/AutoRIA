@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="add-page-bg">
+    <div class="add-container">
+        <h1 class="add-title">Редагування оголошення</h1>
+
+        <form method="POST" action="{% url 'edit_car' ad.id %}" enctype="multipart/form-data" class="add-form">
+            {% csrf_token %}
+            
+            <div class="add-section">
+                <div class="section-header red-stripe">
+                    <div class="step-num">1</div>
+                    <h2>Редагуйте фото авто</h2>
+                </div>
+                <div class="section-body">
+                    <p class="hint-text"><i class="fas fa-info-circle"></i> Перше фото буде основним.</p>
+                    
+                    <div class="file-upload-wrapper">
+                        <input type="file" name="image" id="car-image" accept="image/*" class="file-input">
+                        <label for="car-image" class="file-label" id="file-label-btn">
+                            <i class="fas fa-camera"></i> Завантажити нове фото
+                        </label>
+                    </div>
+
+                    <div id="image-preview-container" class="image-preview-container">
+                        <img id="image-preview" src="" alt="Прев'ю фото">
+                        <button type="button" id="remove-image-btn" class="remove-btn" title="Видалити фото">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="add-section">
+                <div class="section-header">
+                    <div class="step-num">2</div>
+                    <h2>Основна інформація <span>* Поля обов'язкові для заповнення</span></h2>
+                </div>
+                <div class="section-body form-grid">
+                    
+                    <div class="form-group">
+                        <label>Тип транспорту <span>*</span></label>
+                        <select name="transport_type" required>
+                            <option value="" disabled selected hidden>Оберіть</option>
+                            <option value="Легкові">Легкові</option>
+                            <option value="Мото">Мото</option>
+                            <option value="Вантажівки">Вантажівки</option>
+                            <option value="Причепи">Причепи</option>
+                            <option value="Спецтехніка">Спецтехніка</option>
+                            <option value="Сільгосптехніка">Сільгосптехніка</option>
+                            <option value="Автобуси">Автобуси</option>
+                            <option value="Водний транспорт">Водний транспорт</option>
+                            <option value="Повітряний транспорт">Повітряний транспорт</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Марка авто <span>*</span></label>
+                        <input list="brands-list" name="brand" placeholder="Почніть вводити або оберіть" autocomplete="off" required>
+                        <datalist id="brands-list">
+                            <option value="Acura">
+                            <option value="Alfa Romeo">
+                            <option value="Audi">
+                            <option value="BMW">
+                            <option value="Chevrolet">
+                            <option value="Chrysler">
+                            <option value="Citroen">
+                            <option value="Dacia">
+                            <option value="Daewoo">
+                            <option value="Dodge">
+                            <option value="Fiat">
+                            <option value="Ford">
+                            <option value="Honda">
+                            <option value="Hyundai">
+                            <option value="Infiniti">
+                            <option value="Jaguar">
+                            <option value="Jeep">
+                            <option value="Kia">
+                            <option value="Land Rover">
+                            <option value="Lexus">
+                            <option value="Mazda">
+                            <option value="Mercedes-Benz">
+                            <option value="Mini">
+                            <option value="Mitsubishi">
+                            <option value="Nissan">
+                            <option value="Opel">
+                            <option value="Peugeot">
+                            <option value="Porsche">
+                            <option value="Renault">
+                            <option value="Seat">
+                            <option value="Skoda">
+                            <option value="Smart">
+                            <option value="Subaru">
+                            <option value="Suzuki">
+                            <option value="Tesla">
+                            <option value="Toyota">
+                            <option value="Volkswagen">
+                            <option value="Volvo">
+                            <option value="ВАЗ">
+                            <option value="ЗАЗ">
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Модель авто <span>*</span></label>
+                        <input type="text" name="model" placeholder="Наприклад: X5, Camry, Passat" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Рік випуску <span>*</span></label>
+                        <select name="year" required>
+                            <option value="" disabled selected hidden>Оберіть</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                            <option value="2010">2010</option>
+                            <option value="2005">2005</option>
+                            <option value="2000">2000</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Пробіг <span>*</span></label>
+                        <div class="input-with-suffix">
+                            <input type="number" name="mileage" placeholder="Наприклад: 150" required>
+                            <span class="suffix">тис. км</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Регіон / Область <span>*</span></label>
+                        <select name="location" required>
+                            <option value="" disabled selected hidden>Оберіть регіон</option>
+                            <option value="Київ та область">Київ та область</option>
+                            <option value="Вінниця та область">Вінниця та область</option>
+                            <option value="Волинь (Луцьк)">Волинь (Луцьк)</option>
+                            <option value="Дніпро та область">Дніпро та область</option>
+                            <option value="Донецьк та область">Донецьк та область</option>
+                            <option value="Житомир та область">Житомир та область</option>
+                            <option value="Закарпаття (Ужгород)">Закарпаття (Ужгород)</option>
+                            <option value="Запоріжжя та область">Запоріжжя та область</option>
+                            <option value="Івано-Франківськ та область">Івано-Франківськ та область</option>
+                            <option value="Кропивницький та область">Кропивницький та область</option>
+                            <option value="Луганськ та область">Луганськ та область</option>
+                            <option value="Львів та область">Львів та область</option>
+                            <option value="Миколаїв та область">Миколаїв та область</option>
+                            <option value="Одеса та область">Одеса та область</option>
+                            <option value="Полтава та область">Полтава та область</option>
+                            <option value="Рівне та область">Рівне та область</option>
+                            <option value="Суми та область">Суми та область</option>
+                            <option value="Тернопіль та область">Тернопіль та область</option>
+                            <option value="Харків та область">Харків та область</option>
+                            <option value="Херсон та область">Херсон та область</option>
+                            <option value="Хмельницький та область">Хмельницький та область</option>
+                            <option value="Черкаси та область">Черкаси та область</option>
+                            <option value="Чернігів та область">Чернігів та область</option>
+                            <option value="Чернівці та область">Чернівці та область</option>
+                            <option value="Крим (Сімферополь)">Крим (Сімферополь)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Тип пального <span>*</span></label>
+                        <select name="fuel" required>
+                            <option value="" disabled selected hidden>Оберіть</option>
+                            <option value="Бензин">Бензин</option>
+                            <option value="Дизель">Дизель</option>
+                            <option value="Газ">Газ (ГБО)</option>
+                            <option value="Газ / Бензин">Газ / Бензин</option>
+                            <option value="Електро">Електро</option>
+                            <option value="Гібрид">Гібрид (HEV/PHEV)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Коробка передач <span>*</span></label>
+                        <select name="transmission" required>
+                            <option value="" disabled selected hidden>Оберіть</option>
+                            <option value="Ручна / Механіка">Ручна / Механіка</option>
+                            <option value="Автомат">Автомат (АКПП)</option>
+                            <option value="Робот">Робот (РКПП)</option>
+                            <option value="Варіатор">Варіатор (CVT)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group form-group-full">
+                        <label>Модифікація (Двигун, Комплектація)</label>
+                        <input type="text" name="modification" placeholder="Наприклад: 2.0 TDI, M Sport, Long">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="add-section">
+                <div class="section-header">
+                    <div class="step-num">3</div>
+                    <h2>Опис автомобіля</h2>
+                </div>
+                <div class="section-body">
+                    <p class="hint-text warning-hint"><i class="fas fa-exclamation-circle"></i> Забороняється залишати посилання або контактні дані в описі.</p>
+                    <textarea name="description" rows="6" placeholder="Опишіть стан автомобіля, його переваги, що було замінено тощо..." required></textarea>
+                </div>
+            </div>
+
+            <div class="add-section">
+                <div class="section-header">
+                    <div class="step-num">4</div>
+                    <h2>Характеристики авто</h2>
+                </div>
+                <div class="section-body form-grid">
+                    
+                    <div class="form-group">
+                        <label>Колір <span>*</span></label>
+                        <input type="text" name="color" placeholder="Наприклад: Сірий металік, Білий" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Технічний стан <span>*</span></label>
+                        <select name="tech_state" required>
+                            <option value="" disabled selected hidden>Оберіть</option>
+                            <option value="Повністю непошкоджене">Повністю непошкоджене</option>
+                            <option value="Професійно відремонтоване">Професійно відремонтоване</option>
+                            <option value="Не відремонтоване">Потребує ремонту</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="add-section">
+                <div class="section-header">
+                    <div class="step-num">5</div>
+                    <h2>Вартість</h2>
+                </div>
+                <div class="section-body">
+                    <div class="form-group price-group">
+                        <label>Ціна <span>*</span></label>
+                        <div class="input-with-suffix">
+                            <input type="number" name="price" placeholder="Введіть ціну" required>
+                            <span class="suffix">$</span>
+                        </div>
+                    </div>
+
+                    <div class="publish-block">
+                        <button type="submit" class="btn-publish">Зберегти зміни</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<style>
+
+    .add-page-bg { background-color: #f4f8fa; padding: 40px 0; font-family: Arial, sans-serif; }
+    .add-container { max-width: 800px; margin: 0 auto; padding: 0 15px; }
+    .add-title { font-size: 28px; color: #21242b; font-weight: bold; margin-bottom: 24px; }
+    
+    .add-section { background: #fff; border: 1px solid #e5e8ee; border-radius: 4px; margin-bottom: 16px; overflow: hidden; }
+    
+    .section-header { display: flex; align-items: center; background: #f9fbfd; padding: 12px 20px; border-bottom: 1px solid #e5e8ee; position: relative; }
+    .red-stripe::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: #d73a36; }
+    .step-num { width: 24px; height: 24px; background: #a0a8b5; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; margin-right: 12px; }
+    .section-header h2 { font-size: 16px; color: #21242b; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .section-header h2 span { font-size: 12px; color: #d73a36; font-weight: normal; margin-left: 8px; }
+    
+    .section-body { padding: 24px 32px; }
+    .hint-text { font-size: 13px; color: #2b5585; margin: 0 0 16px; background: #f4f8fa; padding: 8px 12px; border-radius: 4px; display: inline-block; }
+    .warning-hint { color: #f09433; background: #fff9e6; }
+    
+    .file-upload-wrapper { position: relative; display: inline-block; margin-bottom: 15px; }
+    .file-input { display: none; }
+    .file-label { display: inline-block; background: #fff; border: 1px solid #d4d9e2; color: #2b5585; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; transition: 0.2s; }
+    .file-label:hover { border-color: #2b5585; }
+
+    .image-preview-container { display: none; position: relative; max-width: 250px; margin-top: 10px; border-radius: 4px; overflow: hidden; border: 2px dashed #d4d9e2; }
+    .image-preview-container img { width: 100%; height: auto; display: block; }
+    .remove-btn { position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, 0.6); color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .remove-btn:hover { background: rgba(215, 58, 54, 0.9); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group-full { grid-column: 1 / -1; }
+    .form-group label { font-size: 13px; color: #4a5468; margin-bottom: 6px; }
+    .form-group label span { color: #d73a36; }
+    
+    .form-group input, .form-group select, .section-body textarea { width: 100%; height: 44px; border: 1px solid #d4d9e2; border-radius: 4px; padding: 0 12px; font-size: 14px; color: #21242b; outline: none; background: #fff; }
+    .section-body textarea { height: auto; padding: 12px; resize: vertical; }
+    .form-group input:focus, .form-group select:focus, .section-body textarea:focus { border-color: #2b5585; }
+    
+    .input-with-suffix { position: relative; display: flex; align-items: center; }
+    .input-with-suffix input { padding-right: 60px; }
+    .input-with-suffix .suffix { position: absolute; right: 0; top: 0; bottom: 0; width: 60px; background: #f4f8fa; border-left: 1px solid #d4d9e2; border-radius: 0 4px 4px 0; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #6a758a; pointer-events: none; }
+
+    .price-group { max-width: 300px; }
+
+    .publish-block { border-top: 1px solid #e5e8ee; padding-top: 24px; margin-top: 24px; }
+    .btn-publish { background: #2b5585; color: #fff; border: none; padding: 14px 32px; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .btn-publish:hover { background: #1f4068; }
+
+    @media (max-width: 600px) {
+        .form-grid { grid-template-columns: 1fr; gap: 16px; }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('[name="transport_type"]').value = "{{ ad.transport_type|escapejs }}";
+        document.querySelector('[name="brand"]').value = "{{ ad.brand|escapejs }}";
+        document.querySelector('[name="model"]').value = "{{ ad.model|escapejs }}";
+        document.querySelector('[name="year"]').value = "{{ ad.year|escapejs }}";
+        document.querySelector('[name="mileage"]').value = "{{ ad.mileage|escapejs }}";
+        document.querySelector('[name="location"]').value = "{{ ad.location|escapejs }}";
+        document.querySelector('[name="fuel"]').value = "{{ ad.fuel|escapejs }}";
+        document.querySelector('[name="transmission"]').value = "{{ ad.transmission|escapejs }}";
+        document.querySelector('[name="modification"]').value = "{{ ad.modification|escapejs }}";
+        document.querySelector('[name="description"]').value = "{{ ad.description|escapejs }}";
+        document.querySelector('[name="color"]').value = "{{ ad.color|escapejs }}";
+        document.querySelector('[name="tech_state"]').value = "{{ ad.tech_state|escapejs }}";
+        document.querySelector('[name="price"]').value = "{{ ad.price|escapejs }}";
+
+        const savedImageUrl = "{{ ad.image_url|default_if_none:''|escapejs }}";
+        
+        const previewContainer = document.getElementById('image-preview-container');
+        const previewImage = document.getElementById('image-preview');
+        const labelBtn = document.getElementById('file-label-btn');
+        const fileInput = document.getElementById('car-image');
+        const removeBtn = document.getElementById('remove-image-btn');
+
+        if (savedImageUrl) {
+            previewImage.src = savedImageUrl;
+            previewContainer.style.display = 'block';
+            labelBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Змінити фото';
+        }
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    labelBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Змінити фото';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeBtn.addEventListener('click', function() {
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            previewImage.src = '';
+            labelBtn.innerHTML = '<i class="fas fa-camera"></i> Завантажити нове фото';
+        });
+    });
+</script>
+{% endblock content %}

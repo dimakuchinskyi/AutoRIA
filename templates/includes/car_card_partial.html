@@ -1,0 +1,36 @@
+{% load static %}
+
+{% for car in cars %}
+<article class="recommend-card">
+    <a href="{% url 'car_detail' car.id %}" style="text-decoration: none; color: inherit; display: block;">
+        <div class="recommend-card__media">
+            {% if car.image_url %}
+                <img src="{{ car.image_url }}" alt="{{ car.brand }} {{ car.model }}" class="recommend-card__car-photo">
+            {% else %}
+                <img src="{% static 'css/assets/img/car.webp' %}" alt="Фото відсутнє" class="recommend-card__car-photo">
+            {% endif %}
+            
+            <span class="recommend-card__close">×</span>
+            <div class="recommend-card__labels">
+                <span class="recommend-card__vin">Перевірений VIN</span>
+            </div>
+            
+            <button class="recommend-card__fav" type="button" onclick="event.preventDefault();">
+                <img src="{% static 'css/assets/icons/heart2.svg' %}" alt="В обране">
+            </button>
+        </div>
+        
+        <div class="recommend-card__body">
+            <h3>{{ car.brand }} {{ car.model }} {{ car.year }}</h3>
+            <p class="recommend-price">{{ car.price }} $</p>
+            <div class="recommend-meta">
+                <span>{{ car.mileage }} тис. км</span>
+                <span>{{ car.transmission }}</span>
+                <span>{{ car.fuel }}</span>
+                <span>{{ car.location }}</span>
+            </div>
+            <div class="recommend-date">Сьогодні</div>
+        </div>
+    </a>
+</article>
+{% endfor %}

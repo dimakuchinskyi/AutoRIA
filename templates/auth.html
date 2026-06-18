@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="auth-page-bg">
+    <div class="auth-container">
+        <div class="auth-promo">
+            <div class="auth-promo-inner">
+                <h1 class="auth-promo-title">Автiвки,<br>перевірені<br>людьми</h1>
+                <div class="floating-pill pill-top-left"><span class="stars-text"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">☆</span></span></div>
+                <div class="floating-pill pill-mid-left">Машина дійсно в салоні</div>
+                <div class="floating-pill pill-top-right">Чесний продавець, розказав все як є</div>
+                <div class="floating-pill pill-bottom-right">Ну трошки фарбована</div>
+                <div class="floating-pill pill-bottom-center"><span class="stars-text"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></span></div>
+            </div>
+        </div>
+
+        <div class="auth-form-wrapper">
+            <div class="auth-box">
+                
+                {% if messages %}
+                    <div style="padding: 0 32px; margin-top: 24px;">
+                        {% for message in messages %}
+                            <div style="background: #ffe082; color: #d73a36; padding: 10px; border-radius: 4px; font-size: 13px; font-weight: bold; text-align: center;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div id="login-form">
+                    <div class="auth-box-header">Вхід на сайт <span class="brand-red">AUTO.RIA</span></div>
+                    <div class="auth-box-body">
+                        
+                        <a href="{% provider_login_url 'google' next='/cabinet/?popup=1' %}" 
+                           class="soc-btn border-blue" 
+                           style="text-decoration: none;"
+                           onclick="window.open(this.href, 'GoogleAuthPopup', 'width=500,height=600,left=' + (screen.width/2-250) + ',top=' + (screen.height/2-300)); return false;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+                            Увійти через Google
+                        </a>
+
+                        <div class="auth-divider"><span>Або</span></div>
+
+                        <div class="input-wrapper">
+                            <input type="text" class="auth-input" placeholder="Телефон або e-mail">
+                            <i class="fas fa-info-circle input-icon"></i>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="password" class="auth-input" placeholder="Пароль">
+                            <i class="fas fa-eye input-icon"></i>
+                        </div>
+
+                        <div class="auth-options">
+                            <label class="remember-label"><input type="checkbox" checked> Запам'ятати мене</label>
+                            <a href="#" class="forgot-link">Забули пароль?</a>
+                        </div>
+
+                        <button class="submit-btn">Увійти</button>
+                        
+                        <div class="register-block">
+                            <a href="#" class="register-link" id="show-register">Зареєструватися на AUTO.RIA</a>
+                        </div>
+
+                        <div class="support-block">
+                            <p class="support-title">Виникли питання?</p>
+                            <a href="#" class="support-link">Служба турботи про користувачів:</a>
+                            <div class="support-contacts">
+                                <i class="fas fa-mobile-alt phone-icon"></i>
+                                <div class="phone-numbers">
+                                    (067) 431-82-29, (093) 170-77-40,<br>
+                                    (050) 416-86-88, 0-800-21-00-12,<br>
+                                    (0432) 503-100
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="not-found-form" style="display: none;">
+                    <div class="auth-box-header">Вхід на сайт <span class="brand-red">AUTO.RIA</span></div>
+                    <div class="auth-box-body">
+                        
+                        <div class="not-found-alert">
+                            <p class="not-found-title">Не вдалося знайти акаунт.</p>
+                            <button class="submit-btn" id="btn-create-new" style="margin-bottom: 12px; background: #76b014;">Створити новий акаунт</button>
+                            <button class="outline-btn-blue" id="btn-already-reg">Уже зареєстрований на AUTO.RIA</button>
+                        </div>
+                        
+                        <a href="#" class="back-link" id="btn-back-login">← Назад</a>
+
+                        <div class="support-block" style="margin-top: 24px;">
+                            <p class="support-title">Виникли питання?</p>
+                            <a href="#" class="support-link">Служба турботи про користувачів:</a>
+                            <div class="support-contacts">
+                                <i class="fas fa-mobile-alt phone-icon"></i>
+                                <div class="phone-numbers">
+                                    (067) 431-82-29, (093) 170-77-40,<br>
+                                    (050) 416-86-88, 0-800-21-00-12,<br>
+                                    (0432) 503-100
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="register-form" style="display: none;">
+                    <div class="auth-box-header">Реєстрація на сайті <span class="brand-red">AUTO.RIA</span></div>
+                    <div class="auth-box-body">
+                        
+                        <form id="custom-register-form" method="POST" action="{% url 'register' %}">
+                            {% csrf_token %}
+                            
+                            <div id="reg-step-1">
+                                <div class="input-wrapper">
+                                    <input type="text" name="first_name" id="reg-first-name" class="auth-input" placeholder="Ім'я" required>
+                                </div>
+                                <div class="input-wrapper">
+                                    <input type="text" name="last_name" id="reg-last-name" class="auth-input" placeholder="Прізвище" required>
+                                </div>
+                                <div class="input-wrapper">
+                                    <input type="email" name="email" id="reg-email" class="auth-input" placeholder="Телефон або e-mail" required>
+                                </div>
+
+                                <div class="auth-agreement">
+                                    <label class="agreement-label">
+                                        <input type="checkbox" id="reg-terms-checkbox">
+                                        <span>Я приймаю умови <a href="#">“Правочин про надання рекламних послуг”</a></span>
+                                    </label>
+                                    <p class="privacy-text">Ваші персональні дані будуть оброблені та захищені згідно до <a href="#">Політики приватності</a></p>
+                                </div>
+
+                                <button type="button" id="btn-step-1" class="submit-btn disabled-btn" disabled>Продовжити</button>
+
+                                <a href="{% provider_login_url 'google' next='/cabinet/?popup=1' %}" 
+                                   class="soc-btn border-blue" 
+                                   style="text-decoration: none;"
+                                   onclick="window.open(this.href, 'GoogleAuthPopup', 'width=500,height=600,left=' + (screen.width/2-250) + ',top=' + (screen.height/2-300)); return false;">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+                                    Увійти через Google
+                                </a>
+
+                                <div class="register-block">
+                                    <a href="#" class="register-link" id="show-login">Вже зареєстровані?</a>
+                                </div>
+
+                                <div class="ecosystem-block">
+                                    <p>Зареєструвавшись, Ви зможете користуватися послугами сайтів:</p>
+                                    <div class="ecosystem-logos">
+                                        <span class="eco-logo bg-blue">RIA</span>
+                                        <span class="eco-logo bg-red">auto <span class="eco-dark">RIA</span></span>
+                                        <span class="eco-logo bg-orange">dim <span class="eco-dark">RIA</span></span>
+                                        <span class="eco-logo bg-green">agro <span class="eco-dark">RIA</span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="reg-step-2" style="display: none;">
+                                <p style="font-size: 13px; color: #4a5468; margin-bottom: 20px;">
+                                    Ваш емейл <strong id="display-reg-email" style="color: #21242b;"></strong> використовуватиметься для входу. Придумайте пароль.
+                                </p>
+
+                                <div class="input-wrapper">
+                                    <input type="password" name="password" id="reg-password" class="auth-input" placeholder="Введіть новий пароль" required>
+                                    <i class="fas fa-eye input-icon"></i>
+                                </div>
+                                <div class="input-wrapper">
+                                    <input type="password" name="password_confirm" id="reg-password-confirm" class="auth-input" placeholder="Повторіть новий пароль" required>
+                                    <i class="fas fa-eye input-icon"></i>
+                                </div>
+
+                                <div id="reg-error-msg" style="color: #d73a36; font-size: 13px; margin-bottom: 15px; display: none;">
+                                    Паролі не співпадають!
+                                </div>
+
+                                <button type="submit" id="btn-submit-reg" class="submit-btn">Зареєструватись</button>
+
+                                <div class="register-block">
+                                    <a href="#" class="register-link" id="back-to-step-1">← Вказати інший номер або емейл</a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const notFoundForm = document.getElementById('not-found-form');
+        
+        const showRegisterBtn = document.getElementById('show-register');
+        const showLoginBtn = document.getElementById('show-login');
+
+        showRegisterBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+
+        showLoginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+
+
+        const termsCheckbox = document.getElementById('reg-terms-checkbox');
+        const btnStep1 = document.getElementById('btn-step-1');
+        const step1Div = document.getElementById('reg-step-1');
+        const step2Div = document.getElementById('reg-step-2');
+        const regEmailInput = document.getElementById('reg-email');
+        const displayRegEmail = document.getElementById('display-reg-email');
+        const realRegisterForm = document.getElementById('custom-register-form');
+        const backToStep1 = document.getElementById('back-to-step-1');
+        
+        const pwd1 = document.getElementById('reg-password');
+        const pwd2 = document.getElementById('reg-password-confirm');
+        const errorMsg = document.getElementById('reg-error-msg');
+
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                btnStep1.classList.remove('disabled-btn');
+                btnStep1.removeAttribute('disabled');
+            } else {
+                btnStep1.classList.add('disabled-btn');
+                btnStep1.setAttribute('disabled', 'true');
+            }
+        });
+
+        btnStep1.addEventListener('click', function() {
+            const fname = document.getElementById('reg-first-name');
+            const lname = document.getElementById('reg-last-name');
+            
+            if (!fname.checkValidity() || !lname.checkValidity() || !regEmailInput.checkValidity()) {
+                realRegisterForm.reportValidity();
+                return;
+            }
+
+            displayRegEmail.textContent = regEmailInput.value;
+
+            step1Div.style.display = 'none';
+            step2Div.style.display = 'block';
+        });
+
+        backToStep1.addEventListener('click', function(e) {
+            e.preventDefault();
+            step2Div.style.display = 'none';
+            step1Div.style.display = 'block';
+        });
+
+        realRegisterForm.addEventListener('submit', function(e) {
+            if (pwd1.value !== pwd2.value) {
+                e.preventDefault();
+                errorMsg.textContent = 'Паролі не співпадають!';
+                errorMsg.style.display = 'block';
+            } else if (pwd1.value.length < 8) {
+                e.preventDefault();
+                errorMsg.textContent = 'Пароль має бути не менше 8 символів.';
+                errorMsg.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('message', function(event) {
+            if (event.data === 'show_account_not_found') {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'none';
+                notFoundForm.style.display = 'block';
+            }
+        });
+
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'google_logged_in') {
+                window.location.href = "{% url 'cabinet' %}";
+            }
+        });
+
+        document.getElementById('btn-back-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            notFoundForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+
+        document.getElementById('btn-already-reg').addEventListener('click', function(e) {
+            e.preventDefault();
+            notFoundForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+
+        document.getElementById('btn-create-new').addEventListener('click', function(e) {
+            e.preventDefault();
+            notFoundForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+    });
+</script>
+
+{% endblock content %}
+
+{% block footer %}
+<div class="auth-custom-bottom">
+    <div class="auth-promo-apps">
+        <div class="app-left">
+            <h2>AUTO.RIA<br>у вашому смартфоні</h2>
+            <p>Все для купівлі та продажу авто<br>в додатку AUTO.RIA</p>
+            <div class="app-badges">
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store"></a>
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play"></a>
+                <a href="#"><img src="https://consumer-img.huawei.com/content/dam/huawei-cbg-site/common/campaign/appgallery/download-badge/badge-en.png" alt="AppGallery"></a>
+            </div>
+        </div>
+        <div class="app-center">
+            <img src="{% static 'css/assets/img/phones.png' %}" alt="Додаток AUTO.RIA" style="max-height: 250px; width: auto; display: block;">
+        </div>
+        <div class="app-right">
+            <p>Приєднуйтесь до спільноти<br>автолюбителів AUTO.RIA</p>
+            <div class="auth-social-row">
+                <a href="#"><i class="fab fa-facebook-f" style="color:#1877f2;"></i></a>
+                <a href="#"><i class="fab fa-instagram" style="color:#e1306c;"></i></a>
+                <a href="#"><i class="fab fa-youtube" style="color:#ff0000;"></i></a>
+                <a href="#"><i class="fab fa-twitter" style="color:#1da1f2;"></i></a>
+                <a href="#"><i class="fab fa-telegram-plane" style="color:#2aabee;"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-white-footer">
+        <div class="awf-inner">
+            <div class="awf-left">
+                <div class="awf-col">
+                    <div class="awf-group">
+                        <h4>Вживані авто</h4>
+                        <p><a href="#">Автодилери</a><span class="dot">•</span><a href="#">Електромобілі</a><span class="dot">•</span><a href="#">Пригнані авто</a></p>
+                        <p><a href="#">Нерозмитнені авто</a><span class="dot">•</span><a href="#">GARAGE AUTO.RIA</a></p>
+                    </div>
+                    <div class="awf-group">
+                        <h4>Нові авто</h4>
+                        <p><a href="#">Автосалони</a><span class="dot">•</span><a href="#">Мотосалони</a><span class="dot">•</span><a href="#">Спецтехніка</a></p>
+                        <p><a href="#">Нові Електромобілі</a><span class="dot">•</span><a href="#">Автоцентр AUTO.RIA</a></p>
+                    </div>
+                    <div class="awf-group">
+                        <h4>Сільгосптехніка</h4>
+                        <p><a href="#">Нова</a><span class="dot">•</span><a href="#">Вживані</a><span class="dot">•</span><a href="#">Оренда</a><span class="dot">•</span><a href="#">Послуги</a></p>
+                    </div>
+                    <div class="awf-group">
+                        <h4>Всі послуги для авто</h4>
+                        <p><a href="#">СТО</a></p>
+                    </div>
+                    <div class="awf-group">
+                        <h4>Сервіси</h4>
+                        <p><a href="#">Калькулятор розмитнення</a><span class="dot">•</span><a href="#">Порівняння авто</a></p>
+                        <p><a href="#">Ціни на пальне</a><span class="dot">•</span><a href="#">Автотерміни</a><span class="dot">•</span><a href="#">Фінансування авто</a></p>
+                    </div>
+                </div>
+                <div class="awf-col">
+                    <div class="awf-group">
+                        <h4>Новини</h4>
+                        <p><a href="#">Тест-драйви</a><span class="dot">•</span><a href="#">Електромобілі</a><span class="dot">•</span><a href="#">Розмитнення</a></p>
+                        <p><a href="#">Онлайн-журнал</a><span class="dot">•</span><a href="#">Як підготувати авто до зими</a></p>
+                    </div>
+                    <div class="awf-links-column">
+                        <a href="#">Відгуки про авто</a>
+                        <a href="#">Авто Лідер</a>
+                        <a href="#">RIA.com для бізнесу</a>
+                        <a href="#">RIA.com Marketplaces</a>
+                        <a href="#">API для розробників</a>
+                        <a href="#">Вікіпедія про AUTO.RIA</a>
+                        <a href="#">Банк ідей</a>
+                        <a href="#">Мапа сайту</a>
+                        <a href="#">Партнерська ініціатива - Біле світло</a>
+                    </div>
+                </div>
+            </div>
+            <div class="awf-right">
+                <div class="awf-support">
+                    <div class="awf-avatars">
+                        <img src="https://i.pravatar.cc/150?img=47" alt="">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="">
+                    </div>
+                    <div class="awf-support-text">
+                        <a href="#">Допомога по сайту<br><strong>AUTO.RIA.com →</strong></a>
+                    </div>
+                </div>
+                <div class="awf-contact-btns">
+                    <a href="#"><i class="fab fa-telegram-plane" style="color:#2aabee;"></i></a>
+                    <a href="#"><i class="fab fa-facebook-messenger" style="color:#006AFF;"></i></a>
+                    <a href="#"><i class="fab fa-viber" style="color:#7360f2;"></i></a>
+                    <a href="#"><i class="fas fa-envelope" style="color:#2b5585;"></i></a>
+                    <a href="#"><i class="fas fa-phone-alt" style="color:#76b014;"></i></a>
+                </div>
+                <a href="#" class="awf-write-btn">Написати нам</a>
+                
+                <div class="awf-links-stack">
+                    <a href="#">Безпечні угоди</a>
+                    <a href="#">Угода про надання послуг</a>
+                    <a href="#">Допомога по сайту AUTO.RIA.com</a>
+                    <a href="#">Політика приватності</a>
+                    <a href="#">Вакансії AUTO.RIA</a>
+                </div>
+            </div>
+        </div>
+        <div class="awf-bottom-strip">
+            <div class="awf-logo-copy">
+                <span class="awf-logo">RIA</span> © 2014-2026 RIA.com
+            </div>
+            <div class="awf-langs">
+                <span class="active">Укр</span> <a href="#">Рус</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .auth-page-bg { background-color: #f4f8fa; width: 100%; display: flex; justify-content: center; padding: 60px 0; overflow: hidden; }
+    .auth-container { max-width: 1000px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 1fr 400px; gap: 60px; align-items: flex-start; padding: 0 24px; }
+    
+    .auth-promo-inner { position: relative; text-align: center; width: 100%; height: 400px; display: flex; justify-content: center; align-items: center; margin-top: 100px; }
+    .auth-promo-title { font-size: 42px; line-height: 1.1; color: #1f2533; font-weight: 800; margin: 0; z-index: 2; }
+    
+    .floating-pill { position: absolute; background: #fff; padding: 10px 18px; border-radius: 30px; font-size: 12px; font-weight: 600; color: #3b4456; box-shadow: 0 8px 24px rgba(29, 37, 51, 0.08); white-space: nowrap; z-index: 1; }
+    .stars-text { font-size: 16px; letter-spacing: 2px; }
+    .star { color: #ffc107; } .star.empty { color: #d4d9e2; }
+    .pill-top-left { top: 15%; left: 0; padding: 8px 14px; }
+    .pill-mid-left { top: 45%; left: -10%; }
+    .pill-top-right { top: 5%; right: -5%; }
+    .pill-bottom-right { bottom: 25%; right: 5%; }
+    .pill-bottom-center { bottom: 5%; left: 35%; padding: 8px 14px; }
+
+    .auth-form-wrapper { display: flex; justify-content: flex-end; }
+    .auth-box { width: 100%; max-width: 380px; background: #fff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); border: 1px solid rgba(225, 230, 239, 0.8); overflow: hidden; }
+    .auth-box-header { text-align: center; padding: 24px 20px 20px; font-size: 18px; font-weight: 700; color: #6a758a; }
+    .brand-red { color: #d73a36; }
+    .auth-box-body { padding: 0 32px 32px; }
+
+    .soc-btn { width: 100%; height: 44px; background: #fff; border-radius: 4px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px; color: #2b5585; font-weight: 500; cursor: pointer; transition: 0.2s; border: 1px solid #4a80b8; }
+    .soc-btn:hover { background: #f8f9fa; }
+    .soc-btn img { width: 18px; }
+
+    .auth-divider { text-align: center; position: relative; margin: 20px 0; }
+    .auth-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #e5e8ee; z-index: 1; }
+    .auth-divider span { background: #fff; padding: 0 10px; color: #4a5468; font-size: 14px; position: relative; z-index: 2; }
+
+    .input-wrapper { position: relative; margin-bottom: 16px; }
+    .auth-input { width: 100%; height: 44px; border: 1px solid #d4d9e2; border-radius: 4px; padding: 0 40px 0 16px; font-size: 14px; color: #222733; outline: none; transition: 0.2s; }
+    .auth-input:focus { border-color: #3b4456; }
+    .input-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #9ba3b3; font-size: 16px; }
+
+    .not-found-alert { background: #f4f8fa; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px; }
+    .not-found-title { font-weight: 700; color: #21242b; margin: 0 0 20px 0; font-size: 15px; text-align: left; }
+    .outline-btn-blue { width: 100%; height: 48px; background: #fff; border: 1px solid #2b5585; color: #2b5585; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .outline-btn-blue:hover { background: #f4f8fa; }
+    .back-link { color: #2b5585; font-size: 14px; text-decoration: none; display: inline-block; margin-bottom: 8px; }
+    .back-link:hover { text-decoration: underline; }
+
+    .auth-agreement { margin-bottom: 20px; }
+    .agreement-label { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #2b5585; cursor: pointer; line-height: 1.4; margin-bottom: 12px; }
+    .agreement-label input { margin-top: 3px; }
+    .agreement-label a { color: #2b5585; text-decoration: underline; }
+    .privacy-text { font-size: 12px; color: #4a5468; line-height: 1.5; margin: 0; }
+    .privacy-text a { color: #2b5585; text-decoration: none; }
+    .privacy-text a:hover { text-decoration: underline; }
+
+    .auth-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-size: 13px; }
+    .remember-label { display: flex; align-items: center; gap: 8px; color: #4a5468; cursor: pointer; }
+    .forgot-link { color: #2b5585; text-decoration: none; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .submit-btn { width: 100%; height: 48px; background: #76b014; color: #fff; border: none; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-bottom: 20px; }
+    .submit-btn:hover { background: #669910; }
+    .disabled-btn { background: #f0f3f7; color: #9ba3b3; cursor: not-allowed; }
+    .disabled-btn:hover { background: #f0f3f7; }
+
+    .register-block { text-align: center; margin-bottom: 24px; }
+    .register-link { color: #2b5585; font-size: 14px; text-decoration: none; display: inline-block; padding: 10px; }
+    .register-link:hover { text-decoration: underline; }
+
+    .ecosystem-block { text-align: center; border-top: 1px solid #e5e8ee; padding-top: 20px; margin-bottom: 24px; }
+    .ecosystem-block p { font-size: 12px; color: #6a758a; margin: 0 0 12px; line-height: 1.4; }
+    .ecosystem-logos { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+    .eco-logo { padding: 4px 6px; border-radius: 3px; color: #fff; font-weight: 800; font-size: 11px; text-transform: lowercase; }
+    .eco-dark { background: #21242b; padding: 1px 4px; border-radius: 2px; text-transform: uppercase; margin-left: 2px; }
+    .bg-blue { background: #2b5585; text-transform: uppercase; }
+    .bg-red { background: #d73a36; }
+    .bg-orange { background: #f09433; }
+    .bg-green { background: #00a041; }
+
+    .support-block { font-size: 12px; color: #4a5468; border-top: 1px solid #e5e8ee; padding-top: 20px; }
+    .support-title { font-weight: 700; color: #21242b; margin: 0 0 4px 0; }
+    .support-link { color: #2b5585; text-decoration: none; display: block; margin-bottom: 12px; }
+    .support-link:hover { text-decoration: underline; }
+    .support-contacts { display: flex; gap: 10px; align-items: flex-start; }
+    .phone-icon { font-size: 18px; color: #9ba3b3; margin-top: 2px; }
+    .phone-numbers { line-height: 1.6; }
+
+
+    .auth-promo-apps { display: flex; justify-content: center; align-items: center; padding: 60px 20px; background: #fff; gap: 80px; }
+    .app-left h2 { font-size: 26px; color: #21242b; margin: 0 0 8px; line-height: 1.2; }
+    .app-left p { font-size: 15px; color: #6a758a; margin: 0 0 24px; line-height: 1.4; }
+    .app-badges { display: flex; gap: 12px; }
+    .app-badges img { height: 40px; }
+    
+    .app-right p { font-size: 16px; color: #4a5468; margin: 0 0 16px; line-height: 1.4; }
+    .auth-social-row { display: flex; gap: 12px; }
+    .auth-social-row a { display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; border-radius: 8px; border: 1px solid #e5e8ee; background: #fff; font-size: 20px; text-decoration: none; transition: 0.2s; }
+    .auth-social-row a:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+    .auth-white-footer { background: #fff; padding: 40px 20px 20px; border-top: 1px solid #e5e8ee; }
+    .awf-inner { max-width: 1260px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr; gap: 60px; }
+    .awf-left { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .awf-group { margin-bottom: 24px; }
+    .awf-group h4 { font-size: 14px; color: #2b5585; font-weight: 700; margin: 0 0 8px; }
+    .awf-group p { font-size: 13px; color: #2b5585; line-height: 1.6; margin: 0 0 4px; }
+    .awf-group a { color: #2b5585; text-decoration: none; transition: 0.2s; }
+    .awf-group a:hover { text-decoration: underline; }
+    .awf-group .dot { color: #9ba3b3; margin: 0 6px; font-size: 10px; }
+    
+    .awf-links-column { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+    .awf-links-column a { font-size: 14px; font-weight: 700; color: #2b5585; text-decoration: none; }
+    .awf-links-column a:hover { text-decoration: underline; }
+
+    .awf-right { display: flex; flex-direction: column; }
+    .awf-support { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .awf-avatars { display: flex; }
+    .awf-avatars img { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #fff; margin-right: -12px; }
+    .awf-support-text a { color: #2b5585; font-size: 14px; text-decoration: none; line-height: 1.4; }
+    .awf-support-text strong { font-weight: 700; }
+
+    .awf-contact-btns { display: flex; gap: 12px; margin-bottom: 24px; }
+    .awf-contact-btns a { display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; border-radius: 8px; border: 1px solid #e5e8ee; font-size: 20px; text-decoration: none; transition: 0.2s; }
+    .awf-contact-btns a:hover { border-color: #c4c9d3; }
+
+    .awf-write-btn { display: flex; justify-content: center; align-items: center; width: 100%; max-width: 270px; height: 44px; border: 1px solid #2b5585; border-radius: 4px; color: #2b5585; font-size: 14px; font-weight: 600; text-decoration: none; margin-bottom: 32px; transition: 0.2s; }
+    .awf-write-btn:hover { background: #f4f8fa; }
+
+    .awf-links-stack { display: flex; flex-direction: column; gap: 14px; font-size: 13px; font-weight: 600; }
+    .awf-links-stack a { color: #2b5585; text-decoration: none; }
+    .awf-links-stack a:hover { text-decoration: underline; }
+
+    .awf-bottom-strip { max-width: 1260px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid #e5e8ee; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #9ba3b3; }
+    .awf-logo { background: #21242b; color: #fff; padding: 2px 6px; border-radius: 2px; font-weight: 700; margin-right: 6px; }
+    .awf-langs { display: flex; gap: 12px; align-items: center; }
+    .awf-langs .active { color: #21242b; font-weight: 600; }
+    .awf-langs a { color: #2b5585; text-decoration: none; }
+
+    @media (max-width: 1000px) {
+        .auth-container { grid-template-columns: 1fr; gap: 40px; }
+        .auth-promo-inner { height: 250px; margin-top: 0; }
+        .auth-promo-title { font-size: 32px; }
+        .auth-form-wrapper { justify-content: center; }
+        .auth-promo-apps { flex-direction: column; text-align: center; gap: 40px; }
+        .awf-inner { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+        .floating-pill { display: none; }
+        .auth-promo-inner { height: 100px; }
+        .awf-left { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock footer %}

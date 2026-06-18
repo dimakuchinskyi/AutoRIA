@@ -1,0 +1,649 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авто.рія - макет</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a href="{% url 'home' %}" class="brand" aria-label="AUTO.RIA">
+                <img src="{% static 'css/assets/img/logo.svg' %}" alt="AUTO.RIA" class="brand__logo">
+            </a>
+            <nav class="nav">
+                <a href="{% url 'search' %}">Вживані авто</a>
+                <a href="#">Нові авто</a>
+                <a href="#">Все для авто</a>
+                <a href="#">GARAGE AUTO.RIA</a>
+                <a href="#">Підтримка 24/7</a>
+            </nav>
+            <div class="topbar__actions">
+                <button class="icon-btn icon-btn--badge" aria-label="Пошук">
+                    <img src="{% static 'css/assets/icons/лупа.svg' %}" alt="" aria-hidden="true">
+                    <span class="badge">NEW</span>
+                </button>
+                <button class="icon-btn" aria-label="Обране">
+                    <img src="{% static 'css/assets/icons/heart.svg' %}" alt="" aria-hidden="true">
+                </button>
+                
+                <a href="{% if user.is_authenticated %}{% url 'cabinet' %}{% else %}{% url 'auth' %}{% endif %}" class="icon-btn" aria-label="Профіль">
+                    <img src="{% static 'css/assets/icons/profile.svg' %}" alt="" aria-hidden="true">
+                </a>
+                
+                <a href="{% url 'add_car' %}" class="sell-btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">+ Продати авто</a>
+            </div>
+        </div>
+        <div class="donate-strip">
+            <span class="flag"></span>
+            <a href="#">Донат до донату — автівка на фронт! Подвоюємо кожну гривню!</a>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}
+        <section class="hero-shell">
+            <div class="hero-card">
+                <h1>Знаємо, бо перевірили</h1>
+                <div class="tabs">
+                    <button class="tab tab--active">Всі</button>
+                    <button class="tab">Вживані</button>
+                    <button class="tab">Нові</button>
+                    <button class="tab">Під пригон</button>
+                </div>
+
+                <form class="filters" method="GET" action="{% url 'search' %}">
+                    <label class="field field--span2">
+                        <span>Тип транспорту</span>
+                        <select class="field__control" name="transport_type">
+                            <option value="">Будь-який</option>
+                            <option value="Легкові">Легкові</option>
+                            <option value="Мото">Мото</option>
+                            <option value="Вантажівки">Вантажівки</option>
+                            <option value="Причепи">Причепи</option>
+                            <option value="Спецтехніка">Спецтехніка</option>
+                            <option value="Автобуси">Автобуси</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>Марка авто</span>
+                        <input list="search-brands" class="field__control" name="brand" placeholder="Всі марки" autocomplete="off" style="border:none; padding:0; background:transparent;">
+                        <datalist id="search-brands">
+                            <option value="Audi">
+                            <option value="BMW">
+                            <option value="Chevrolet">
+                            <option value="Ford">
+                            <option value="Honda">
+                            <option value="Hyundai">
+                            <option value="Kia">
+                            <option value="Mazda">
+                            <option value="Mercedes-Benz">
+                            <option value="Nissan">
+                            <option value="Peugeot">
+                            <option value="Renault">
+                            <option value="Skoda">
+                            <option value="Toyota">
+                            <option value="Volkswagen">
+                        </datalist>
+                    </label>
+                    <label class="field">
+                        <span>Рік випуску</span>
+                        <select class="field__control" name="year">
+                            <option value="">Будь-який</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2015">2015</option>
+                            <option value="2010">2010</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>Вартість до ($)</span>
+                        <select class="field__control" name="price">
+                            <option value="">Будь-яка</option>
+                            <option value="5000">До 5 000 $</option>
+                            <option value="10000">До 10 000 $</option>
+                            <option value="15000">До 15 000 $</option>
+                            <option value="20000">До 20 000 $</option>
+                            <option value="30000">До 30 000 $</option>
+                            <option value="50000">До 50 000 $</option>
+                        </select>
+                    </label>
+                    <label class="field field--span2">
+                        <span>Регіон</span>
+                        <select class="field__control" name="region">
+                            <option value="">Вся Україна</option>
+                            <option value="Вінниця">Вінниця</option>
+                            <option value="Київ">Київ</option>
+                            <option value="Львів">Львів</option>
+                            <option value="Одеса">Одеса</option>
+                            <option value="Дніпро">Дніпро</option>
+                            <option value="Харків">Харків</option>
+                            <option value="Івано-Франківськ">Івано-Франківськ</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>Пальне</span>
+                        <select class="field__control" name="fuel">
+                            <option value="">Будь-яке</option>
+                            <option value="Бензин">Бензин</option>
+                            <option value="Дизель">Дизель</option>
+                            <option value="Електро">Електро</option>
+                            <option value="Газ">Газ (ГБО)</option>
+                            <option value="Гібрид">Гібрид</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>Коробка передач</span>
+                        <select class="field__control" name="transmission">
+                            <option value="">Будь-яка</option>
+                            <option value="Автомат">Автомат</option>
+                            <option value="Ручна / Механіка">Механіка</option>
+                            <option value="Робот">Робот</option>
+                        </select>
+                    </label>
+                    <div class="actions">
+                        <button type="submit" class="search-btn">Шукати</button>
+                        <button type="button" class="outline-btn">Розширений пошук</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <div class="page-stack">
+            <section class="section">
+                <div class="section__head">
+                    <h2>Продовжити пошук</h2>
+                    <div class="arrows">
+                        <button type="button">‹</button>
+                        <button type="button">›</button>
+                    </div>
+                </div>
+                <div class="cards cards--continue">
+                    <article class="mini-card">
+                        <div class="mini-card__logo">⊚</div>
+                        <div>
+                            <h3>Citroen Grand C4 Picasso від 2015 р...</h3>
+                            <p>Вся Україна, до 15 000 $, Дизель, Автома...</p>
+                        </div>
+                        <span class="bubble">+8</span>
+                    </article>
+                    <article class="mini-card">
+                        <div class="mini-card__logo">⊚</div>
+                        <div>
+                            <h3>Citroen Grand C4 Picasso від 2015 р...</h3>
+                            <p>Чернівецька обл., до 15 000 $, Дизель, Автомат...</p>
+                        </div>
+                    </article>
+                    <article class="mini-card">
+                        <div class="mini-card__logo">⊚</div>
+                        <div>
+                            <h3>Citroen Grand C4 Picasso від 2015 р...</h3>
+                            <p>Івано-Франківська обл., до 15 000 $, ...</p>
+                        </div>
+                        <span class="bubble">+1</span>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section__head">
+                    <h2>Відеоповідомлення</h2>
+                    <div class="arrows">
+                        <button type="button">‹</button>
+                        <button type="button">›</button>
+                    </div>
+                </div>
+                <div class="story-row">
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/minicooper1.jpg' %}" alt="MINI Cooper" class="story-card__thumb">
+                        <p>MINI Cooper...</p>
+                    </article>
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/kiaoptima.jpg' %}" alt="Kia Optima" class="story-card__thumb">
+                        <p>Kia Optima 2012</p>
+                    </article>
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/fiatpunto2011.jpg' %}" alt="Fiat Punto" class="story-card__thumb">
+                        <p>Fiat Punto 2011</p>
+                    </article>
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/fordsmax.jpg' %}" alt="Renault Kangoo" class="story-card__thumb">
+                        <p>Opel Vectra...</p>
+                    </article>
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/renault kangoo.jpg' %}" alt="Renault Kangoo" class="story-card__thumb">
+                        <p>Renault Kangoo...</p>
+                    </article>
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/mersedes-benz.jpg' %}" alt="Mercedes" class="story-card__thumb">
+                        <p>Mercedes-Be...</p>
+                    </article>
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/peugot200.jpg' %}" alt="Peugeot" class="story-card__thumb">
+                        <p>Peugeot 200...</p>
+                    </article>
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/bmw5series.jpg' %}" alt="BMW" class="story-card__thumb">
+                        <p>BMW 5 Serie...</p>
+                    </article>
+                    <article class="story-card">
+                        <img src="{% static 'css/assets/img/fordsmax.jpg' %}" alt="Ford" class="story-card__thumb">
+                        <p>Ford S-Max...</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section section--recommend">
+                <div class="section__head section__head--compact">
+                    <div class="section__titleline">
+                        <h2>Сьогодні на AUTO.RIA</h2>
+                        <span class="section-pill">Нові оголошення</span>
+                    </div>
+                </div>
+                
+                <div class="recommend-grid" id="car-grid">
+                    {% include "includes/car_card_partial.html" %}
+                </div>
+
+                <div class="section-actions">
+                    <button type="button" id="load-more-btn" data-offset="3" class="show-more">Показати ще</button>
+                </div>
+            </section>
+
+            <section class="section section--transport">
+                <div class="section__head section__head--compact">
+                    <h2>Типи транспорту</h2>
+                </div>
+                <div class="transport-tabs">
+                    <button class="transport-tab is-active" type="button">Легкові б/у</button>
+                    <button class="transport-tab" type="button">Нові авто</button>
+                    <button class="transport-tab" type="button">Мото</button>
+                    <button class="transport-tab" type="button">Вантажівки</button>
+                    <button class="transport-tab" type="button">Причепи</button>
+                    <button class="transport-tab" type="button">Спецтехніка</button>
+                    <button class="transport-tab" type="button">Сільгосптехніка</button>
+                    <button class="transport-tab" type="button">Автобуси</button>
+                    <button class="transport-tab" type="button">Водний</button>
+                </div>
+                <div class="brand-grid">
+                    <article class="brand-card"><div class="brand-card__icon">В</div><p>ВАЗ</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">W</div><p>Volkswagen</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">M</div><p>Mercedes-Benz</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">O</div><p>Opel</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">R</div><p>Renault</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">B</div><p>BMW</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">F</div><p>Ford</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">A</div><p>Audi</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">T</div><p>Toyota</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">S</div><p>Skoda</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">N</div><p>Nissan</p></article>
+                    <article class="brand-card"><div class="brand-card__icon">H</div><p>Honda</p></article>
+                    <article class="brand-card brand-card--all"><div class="brand-card__icon brand-card__icon--arrow">›</div><p>Дивитись всі</p></article>
+                </div>
+            </section>
+
+            <section class="section section--survey">
+                <div class="survey-card">
+                    <div class="survey-card__copy">
+                        <h2>Оцініть, як вам нова головна сторінка?</h2>
+                        <p>Наскільки зручні і зрозумілі ці оновлення для вас?</p>
+                    </div>
+                    <div class="survey-card__rating">
+                        <div class="stars">
+                            <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+                        </div>
+                        <div class="stars-counts">
+                            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section section--news">
+                <div class="section__head">
+                    <h2>Новини про авто</h2>
+                </div>
+                <div class="news-tabs">
+                    <button class="news-tab news-tab--active">Автомобільні новини</button>
+                    <button class="news-tab">Тест-драйви</button>
+                    <button class="news-tab">Журнал</button>
+                    <button class="news-tab">Як підготувати авто до зими</button>
+                    <button class="news-tab">Акції</button>
+                    <button class="news-tab">Огляди</button>
+                    <button class="news-tab">Премія «Авто Лідер» 2026</button>
+                </div>
+                <div class="news-grid">
+                    <div class="news-featured">
+                        <img src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="SEAT Ibiza" class="news-featured__img">
+                        <div class="news-featured__overlay">
+                            <span class="news-featured__tag">ТЕСТ-ДРАЙВ</span>
+                            <h3 class="news-featured__title">SEAT Ibiza</h3>
+                        </div>
+                    </div>
+                    <div class="news-list">
+                        <article class="news-item">
+                            <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Lexus" class="news-item__thumb">
+                            <div class="news-item__body">
+                                <h3><a href="#">Lexus назвав українські ціни на оновлений електричний RZ</a></h3>
+                                <span class="news-item__date">16 червня 2026</span>
+                            </div>
+                        </article>
+                        <article class="news-item">
+                            <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Jeep" class="news-item__thumb">
+                            <div class="news-item__body">
+                                <h3><a href="#">Автомобіль тижня: Jeep Compass в Україні</a></h3>
+                                <span class="news-item__date">15 червня 2026</span>
+                            </div>
+                        </article>
+                        <article class="news-item">
+                            <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="BMW" class="news-item__thumb">
+                            <div class="news-item__body">
+                                <h3><a href="#">Німці показали яким буде електричний BMW M3 із чотирма двигунами</a></h3>
+                                <span class="news-item__date">15 червня 2026</span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="section-actions">
+                    <button class="show-more" type="button">Читати все</button>
+                </div>
+            </section>
+
+            <section class="section section--recommend-links">
+                <div class="section__head">
+                    <h2>AUTO.RIA рекомендує</h2>
+                </div>
+                <div class="recommend-tabs">
+                    <button class="recommend-tab recommend-tab--active">Можливості розміщення</button>
+                    <button class="recommend-tab">Пошук автомобілів</button>
+                    <button class="recommend-tab">Автомобільні компанії</button>
+                    <button class="recommend-tab">Товари для авто</button>
+                    <button class="recommend-tab">Перед купівлею авто</button>
+                    <button class="recommend-tab">Автомобільні послуги</button>
+                </div>
+                <div class="recommend-links">
+                    <a href="#" class="recommend-link">Просування авто в пошуку <span>&gt;</span></a>
+                    <a href="#" class="recommend-link">Вигоди на публікації до -45% <span>&gt;</span></a>
+                    <a href="#" class="recommend-link">Вигоди на ТОП до -45% <span>&gt;</span></a>
+                    <a href="#" class="recommend-link">Просування нового авто в пошуку <span>&gt;</span></a>
+                </div>
+            </section>
+
+            <section class="section section--catalog">
+                <div class="section__head">
+                    <h2>Каталог автомобілів</h2>
+                </div>
+                <div class="catalog-tabs">
+                    <button class="catalog-tab catalog-tab--active">Вживані авто</button>
+                    <button class="catalog-tab">Нові авто</button>
+                    <button class="catalog-tab">Все для автомобіліста</button>
+                    <button class="catalog-tab">Новини</button>
+                    <button class="catalog-tab">Теми</button>
+                    <button class="catalog-tab">Відгуки</button>
+                    <span class="catalog-sort">По марці ↑↓</span>
+                </div>
+                <div class="catalog-grid">
+                    <div class="catalog-col">
+                        <a href="#" class="catalog-item"><span>Дивитись всі марки</span><span class="catalog-count">359 327</span></a>
+                        <a href="#" class="catalog-item"><span>Дивитись всі роки</span><span class="catalog-count">359 327</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог легковиків</span><span class="catalog-count">311 019</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог мото</span><span class="catalog-count">18 398</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог водного</span><span class="catalog-count">1 259</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог сільгосптехніки</span><span class="catalog-count">35 477</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог спецтехніки</span><span class="catalog-count">3 126</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог автобусів</span><span class="catalog-count">4 125</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог вантажівок</span><span class="catalog-count">11 662</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог причепів</span><span class="catalog-count">9 537</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог автобудинків</span><span class="catalog-count">188</span></a>
+                        <a href="#" class="catalog-item"><span>Каталог повітряного транспорту</span><span class="catalog-count">13</span></a>
+                    </div>
+                    <div class="catalog-col">
+                        <a href="#" class="catalog-item"><span>Volkswagen</span><span class="catalog-count">36 038</span></a>
+                        <a href="#" class="catalog-item"><span>Audi</span><span class="catalog-count">21 231</span></a>
+                        <a href="#" class="catalog-item"><span>BMW</span><span class="catalog-count">20 766</span></a>
+                        <a href="#" class="catalog-item"><span>Mercedes-Benz</span><span class="catalog-count">18 927</span></a>
+                        <a href="#" class="catalog-item"><span>Ford</span><span class="catalog-count">17 872</span></a>
+                        <a href="#" class="catalog-item"><span>Renault</span><span class="catalog-count">16 823</span></a>
+                        <a href="#" class="catalog-item"><span>ВАЗ / Lada</span><span class="catalog-count">15 571</span></a>
+                        <a href="#" class="catalog-item"><span>Nissan</span><span class="catalog-count">13 333</span></a>
+                        <a href="#" class="catalog-item"><span>Opel</span><span class="catalog-count">13 278</span></a>
+                        <a href="#" class="catalog-item"><span>Škoda</span><span class="catalog-count">13 163</span></a>
+                        <a href="#" class="catalog-item"><span>Toyota</span><span class="catalog-count">11 259</span></a>
+                        <a href="#" class="catalog-item"><span>Hyundai</span><span class="catalog-count">10 895</span></a>
+                    </div>
+                    <div class="catalog-col">
+                        <a href="#" class="catalog-item"><span>Mazda</span><span class="catalog-count">8 363</span></a>
+                        <a href="#" class="catalog-item"><span>Kia</span><span class="catalog-count">8 321</span></a>
+                        <a href="#" class="catalog-item"><span>Peugeot</span><span class="catalog-count">7 404</span></a>
+                        <a href="#" class="catalog-item"><span>Chevrolet</span><span class="catalog-count">7 008</span></a>
+                        <a href="#" class="catalog-item"><span>Honda</span><span class="catalog-count">6 469</span></a>
+                        <a href="#" class="catalog-item"><span>Mitsubishi</span><span class="catalog-count">6 311</span></a>
+                        <a href="#" class="catalog-item"><span>Daewoo</span><span class="catalog-count">5 888</span></a>
+                        <a href="#" class="catalog-item"><span>Tesla</span><span class="catalog-count">5 731</span></a>
+                        <a href="#" class="catalog-item"><span>Volvo</span><span class="catalog-count">4 319</span></a>
+                        <a href="#" class="catalog-item"><span>Jeep</span><span class="catalog-count">4 184</span></a>
+                        <a href="#" class="catalog-item"><span>Citroen</span><span class="catalog-count">4 173</span></a>
+                        <a href="#" class="catalog-item"><span>ЗАЗ</span><span class="catalog-count">3 963</span></a>
+                    </div>
+                    <div class="catalog-col">
+                        <a href="#" class="catalog-item"><span>Land Rover</span><span class="catalog-count">3 236</span></a>
+                        <a href="#" class="catalog-item"><span>Lexus</span><span class="catalog-count">3 230</span></a>
+                        <a href="#" class="catalog-item"><span>Fiat</span><span class="catalog-count">2 827</span></a>
+                        <a href="#" class="catalog-item"><span>Subaru</span><span class="catalog-count">2 700</span></a>
+                        <a href="#" class="catalog-item"><span>Suzuki</span><span class="catalog-count">2 379</span></a>
+                        <a href="#" class="catalog-item"><span>Chery</span><span class="catalog-count">2 214</span></a>
+                        <a href="#" class="catalog-item"><span>ГАЗ</span><span class="catalog-count">1 995</span></a>
+                        <a href="#" class="catalog-item"><span>Infiniti</span><span class="catalog-count">1 830</span></a>
+                        <a href="#" class="catalog-item"><span>Yamaha</span><span class="catalog-count">1 813</span></a>
+                        <a href="#" class="catalog-item"><span>Porsche</span><span class="catalog-count">1 780</span></a>
+                        <a href="#" class="catalog-item"><span>Dodge</span><span class="catalog-count">1 721</span></a>
+                        <a href="#" class="catalog-item"><span>MAN</span><span class="catalog-count">1 540</span></a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section section--about">
+                <div class="about-text">
+                    <p>AUTO.RIA – найбільший великий авто базар України серед всіх вітчизняних сайтів подібного роду. У намірі допомогти як покупцям транспортних засобів, так і бажаючим їх продати, мы розробили зручний і масштабний ресурс, представлений у вигляді дошки онлайн-оголошень.</p>
+                </div>
+            </section>
+        </div> 
+        {% endblock content %}
+        
+        <div class="community-wrapper" style="margin-top: 24px;">
+            <div class="community-grid">
+                <div class="community-card community-card--blue">
+                    <h3>Приєднуйтесь до спільноти автолюбителів AUTO.RIA</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon icon-insta"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon icon-fb"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon icon-yt"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-icon icon-tiktok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-icon icon-tg"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="#" class="social-icon icon-x"><i class="fab fa-twitter"></i></a>
+                    </div>
+                    <button class="community-btn" type="button">
+                        <i class="fab fa-telegram-plane" style="color: #0088cc; font-size: 18px; margin-right: 6px;"></i> 
+                        Пошук авто • Чат-бот
+                    </button>
+                </div>
+                <div class="community-card community-card--blue app-card-bg">
+                    <div class="app-card-content">
+                    <h3>Додаток AUTO.RIA</h3>
+                    <p>все для купівлі та продажу авто у вашому смартфоні</p>
+                    <div class="app-badges">
+                        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" style="height: 40px;"></a>
+                        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" style="height: 40px;"></a>
+                        <a href="#"><img src="{% static 'css/assets/img/appgallery.png' %}" alt="AppGallery" style="height: 40px;"></a>
+                    </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        {% block footer %}
+        <footer class="footer" style="margin-top: 0;">
+            <div class="footer__inner">
+                
+                <div class="footer-top">
+                    <div class="footer-contacts">
+                        <div class="footer-avatars">
+                            <img src="https://i.pravatar.cc/150?img=47" alt="Support" class="footer-avatar">
+                            <img src="https://i.pravatar.cc/150?img=11" alt="Support" class="footer-avatar">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="Support" class="footer-avatar">
+                        </div>
+                        <div class="footer-contact-info">
+                            <h3>Служба турботи про користувачів 24/7</h3>
+                            <p><a href="#" style="text-decoration: underline; color: #a0a8b5;">Допомога по сайту</a></p>
+                        </div>
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" class="footer-social-icon"><i class="fab fa-telegram-plane" style="color: #0088cc;"></i></a>
+                        <a href="#" class="footer-social-icon"><i class="fab fa-facebook-messenger" style="color: #006AFF;"></i></a>
+                        <a href="#" class="footer-social-icon"><i class="fab fa-viber" style="color: #7360f2;"></i></a>
+                        <a href="#" class="footer-social-icon"><i class="fas fa-envelope" style="color: #1a1d23;"></i></a>
+                        <a href="#" class="footer-social-icon"><i class="fas fa-phone-alt" style="color: #1a1d23;"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-buttons">
+                    <a href="#" class="footer-pill">Відгуки про авто</a>
+                    <a href="#" class="footer-pill">Авто Лідер</a>
+                    <a href="#" class="footer-pill">RIA.com для бізнесу</a>
+                    <a href="#" class="footer-pill">RIA.com Marketplace</a>
+                    <a href="#" class="footer-pill">API для розробників</a>
+                    <a href="#" class="footer-pill">Вікіпедія про AUTO.RIA</a>
+                    <a href="#" class="footer-pill">Безпечні угоди</a>
+                    <a href="#" class="footer-pill">Вакансії AUTO.RIA</a>
+                    <a href="#" class="footer-pill">Партнерська ініціатива • Біле світло</a>
+                </div>
+
+                <div class="footer-links-grid">
+                    
+                    <div class="footer-links-main-col">
+                        <div class="footer-link-block">
+                            <h4>Вживані авто</h4>
+                            <div class="footer-inline-links">
+                                <a href="#">Автодилери</a><span class="dot">•</span>
+                                <a href="#">Авто з Європи</a><span class="dot">•</span>
+                                <a href="#">Пригнані авто</a><span class="dot">•</span>
+                                <a href="#">Нерозмитнені авто</a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-link-block">
+                            <h4>Нові авто</h4>
+                            <div class="footer-inline-links">
+                                <a href="#">Автосалони</a><span class="dot">•</span>
+                                <a href="#">Мотосалони</a><span class="dot">•</span>
+                                <a href="#">Спецтехніка</a><span class="dot">•</span>
+                                <a href="#">Електромобілі</a><span class="dot">•</span>
+                                <a href="#">Автоцентр AUTO.RIA</a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-link-block">
+                            <h4>Сільгосптехніка</h4>
+                            <div class="footer-inline-links">
+                                <a href="#">Оренда</a><span class="dot">•</span>
+                                <a href="#">Послуги</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer-links-main-col">
+                        <div class="footer-link-block">
+                            <h4>Послуги для авто</h4>
+                            <div class="footer-inline-links">
+                                <a href="#">СТО</a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-link-block">
+                            <h4>Новини</h4>
+                            <div class="footer-inline-links">
+                                <a href="#">Тест-драйви</a><span class="dot">•</span>
+                                <a href="#">Електромобілі</a><span class="dot">•</span>
+                                <a href="#">Розмитнення</a><span class="dot">•</span>
+                                <a href="#">Онлайн-журнал</a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-link-block">
+                            <h4>Сервіси</h4>
+                            <div class="footer-inline-links">
+                                <a href="#">Калькулятор розмитнення</a><span class="dot">•</span>
+                                <a href="#">Порівняння авто</a><span class="dot">•</span>
+                                <a href="#">Ціни на пальне</a><span class="dot">•</span>
+                                <a href="#">Автотерміни</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="footer-bottom">
+                    <div class="footer-bottom-left">
+                        <a href="#">Угода про надання послуг</a>
+                        <a href="#">Політика Приватності</a>
+                        <a href="#">Мапа сайту</a>
+                    </div>
+                    <div class="footer-bottom-right">
+                        <span style="color: #fff; cursor: pointer;">Українська ▼</span>
+                        <span class="copy-right">© 2014-2026 RIA.com</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {% endblock footer %}
+    </main>
+
+    <script>
+        if (window.opener && !window.opener.closed) {
+            let isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}";
+            
+            if (isAuthenticated === "true") {
+                window.opener.location.href = "{% url 'cabinet' %}";
+                window.close();
+            }
+        }
+    </script>
+    <script>
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            let btn = this;
+            let offset = parseInt(btn.getAttribute('data-offset'));
+
+            fetch(`/load-more-cars/?offset=${offset}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.html) {
+                        document.getElementById('car-grid').insertAdjacentHTML('beforeend', data.html);
+                        btn.setAttribute('data-offset', offset + 3);
+                    }
+                    if (!data.has_more) {
+                        btn.style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Помилка завантаження:', error));
+        });
+    }
+    </script>
+    <script>
+    if (window.location.search.includes('popup=1')) {
+        localStorage.setItem('google_logged_in', Date.now());
+        window.close();
+    }
+</script>
+</body>
+</html>
